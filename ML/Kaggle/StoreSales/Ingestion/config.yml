@@ -1,0 +1,7 @@
+files:
+  - csv: "/home/alex/Projects/DataSci/ML/Kaggle/StoreSales/Datasets/train.csv"
+    parquet: "/home/alex/Projects/DataSci/ML/Kaggle/StoreSales/Datalake/train.parquet"
+    mode: "append"
+  - csv: "/home/alex/Projects/DataSci/ML/Kaggle/StoreSales/Datasets/test.csv"
+    parquet: "/home/alex/Projects/DataSci/ML/Kaggle/StoreSales/Datalake/test.parquet"
+    mode: "refresh"
