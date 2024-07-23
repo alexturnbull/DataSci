@@ -1,7 +1,26 @@
+#mode can be "append" or "refresh"
 files:
+    #Train
   - csv: "/home/alex/Projects/DataSci/ML/Kaggle/StoreSales/Datasets/train.csv"
     parquet: "/home/alex/Projects/DataSci/ML/Kaggle/StoreSales/Datalake/train.parquet"
-    mode: "append"
+    mode: "refresh"
+    #Test
   - csv: "/home/alex/Projects/DataSci/ML/Kaggle/StoreSales/Datasets/test.csv"
     parquet: "/home/alex/Projects/DataSci/ML/Kaggle/StoreSales/Datalake/test.parquet"
+    mode: "refresh"
+    #transactions
+  - csv: "/home/alex/Projects/DataSci/ML/Kaggle/StoreSales/Datasets/transactions.csv"
+    parquet: "/home/alex/Projects/DataSci/ML/Kaggle/StoreSales/Datalake/transactions.parquet"
+    mode: "refresh"
+    #stores
+  - csv: "/home/alex/Projects/DataSci/ML/Kaggle/StoreSales/Datasets/stores.csv"
+    parquet: "/home/alex/Projects/DataSci/ML/Kaggle/StoreSales/Datalake/stores.parquet"
+    mode: "refresh"
+    #oil
+  - csv: "/home/alex/Projects/DataSci/ML/Kaggle/StoreSales/Datasets/oil.csv"
+    parquet: "/home/alex/Projects/DataSci/ML/Kaggle/StoreSales/Datalake/oil.parquet"
+    mode: "refresh"
+    #holiday_events
+  - csv: "/home/alex/Projects/DataSci/ML/Kaggle/StoreSales/Datasets/holidays_events.csv"
+    parquet: "/home/alex/Projects/DataSci/ML/Kaggle/StoreSales/Datalake/holidays_events.parquet"
     mode: "refresh"
