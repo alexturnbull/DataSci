@@ -1,4 +1,5 @@
-.datasci/
+.mlws/
 ML/kaggle/StoreSales/Datalake/
 ML/Kaggle/StoreSales/Datasets/
+SampleData/
 Orchestration/.env
