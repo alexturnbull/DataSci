@@ -36,18 +36,31 @@ def preprocess_date_and_time(data):
 
     return data
 
-def encode_categorical_features(data, categorical_columns):
-    label_encoders = {}
+def encode_categorical_features(data, categorical_columns, label_encoders=None):
+    if label_encoders is None:
+        label_encoders = {}
+
     for col in categorical_columns:
-        le = LabelEncoder()
-        data[col] = le.fit_transform(data[col])
-        label_encoders[col] = le  # Save label encoder for possible inverse transformation later
+        if col in label_encoders:  # Use existing encoder
+            data[col] = label_encoders[col].transform(data[col])
+        else:  # Create new encoder
+            le = LabelEncoder()
+            data[col] = le.fit_transform(data[col])
+            label_encoders[col] = le  # Save for future use
+
     return data, label_encoders
 
+
 def normalize_numerical_columns(data, numerical_columns, scaler=None):
-    if not scaler:
+    if scaler is None:
         scaler = StandardScaler()
-    data[numerical_columns] = scaler.fit_transform(data[numerical_columns])
+        data[numerical_columns] = scaler.fit_transform(data[numerical_columns])  # Fit & transform
+    else:
+        try:
+            data[numerical_columns] = scaler.transform(data[numerical_columns])  # Transform only
+        except:
+            data[numerical_columns] = scaler.fit_transform(data[numerical_columns])  # Fit & transform
+
     return data, scaler
 
 def map_total_stops(data):
@@ -63,7 +76,7 @@ def map_total_stops(data):
         print("Warning: There are NaN values in the 'Total_Stops' column after mapping.")
     return data
 
-def preprocess_data(raw):
+def preprocess_data(raw, label_encoders=None, scaler=None):
     data = raw.copy()
 
     # Apply function to the column
@@ -74,11 +87,11 @@ def preprocess_data(raw):
 
     # Handle categorical features
     categorical_columns = ['Airline', 'Source', 'Destination', 'Route', 'Additional_Info']
-    data, label_encoders = encode_categorical_features(data, categorical_columns)
+    data, label_encoders = encode_categorical_features(data, categorical_columns, label_encoders=label_encoders)
 
     # Normalize numerical columns
     numerical_columns = ['Journey_day', 'Journey_month', 'Dep_hour', 'Dep_minute', 'Arrival_hour', 'Arrival_minute', 'Duration']
-    data, scaler = normalize_numerical_columns(data, numerical_columns)
+    data, scaler = normalize_numerical_columns(data, numerical_columns, scaler=scaler)
 
     # Map Total_Stops
     data = map_total_stops(data)
