@@ -29,7 +29,7 @@ joblib.dump(scaler, r'C:\Projects\DataSci\ML\TicketPrice\live_model\model_output
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
 
-def create_model_1(input_shape):
+def create_simple_dense_model(input_shape):
     model = models.Sequential([
         layers.Dense(64, activation='relu', input_shape=input_shape),
         layers.Dense(32, activation='relu'),
@@ -38,18 +38,23 @@ def create_model_1(input_shape):
     model.compile(optimizer='adam', loss='mean_absolute_error')
     return model
 
-def create_model_2(input_shape):
+def create_regularized_dense_model(input_shape):
     model = models.Sequential([
         layers.Dense(128, activation='relu', input_shape=input_shape),
+        layers.Dropout(0.2),
+        layers.BatchNormalization(),
         layers.Dense(64, activation='relu'),
+        layers.Dropout(0.2),
+        layers.BatchNormalization(),
         layers.Dense(32, activation='relu'),
+        layers.Dropout(0.2),
+        layers.BatchNormalization(),
         layers.Dense(1)  # Output price
     ])
     model.compile(optimizer='adam', loss='mean_absolute_error')
     return model
 
-
-def create_model_3(input_shape):
+def create_cnn_model(input_shape):
     model = models.Sequential([
         layers.Reshape((input_shape[0], 1), input_shape=input_shape),
         layers.Conv1D(64, 3, activation='relu'),
@@ -62,7 +67,6 @@ def create_model_3(input_shape):
     ])
     model.compile(optimizer='adam', loss='mean_absolute_error')
     return model
-
 
 # Train Random Forest
 def create_rf_model():
@@ -77,9 +81,9 @@ def create_xgb_model():
 
 input_shape = (X_train.shape[1],)  # Shape of the input features
 
-model1_nn = create_model_1(input_shape)
-model2_nn = create_model_2(input_shape)
-model3_nn = create_model_3(input_shape)
+model1_nn = create_simple_dense_model(input_shape)
+model2_nn = create_regularized_dense_model(input_shape)
+model3_nn = create_cnn_model(input_shape)
 
 models_list = [model1_nn, model2_nn, model3_nn]
 for i, model in enumerate(models_list):
