@@ -1,6 +1,7 @@
 import numpy as np
 import tensorflow as tf
 from tensorflow.keras import layers, models
+from tensorflow.keras import regularizers
 from sklearn.ensemble import RandomForestRegressor
 from xgboost import XGBRegressor
 from sklearn.linear_model import LinearRegression
@@ -19,6 +20,11 @@ class ModelEnsembler:
     def create_simple_dense_model(self):
         model = models.Sequential([
             layers.Dense(64, activation='relu', input_shape=self.input_shape),
+            layers.Dropout(0.2),
+            layers.Dense(128, activation='relu', kernel_regularizer=regularizers.l2(0.01),),
+            layers.Dropout(0.2),
+            layers.Dense(128, activation='relu', kernel_regularizer=regularizers.l2(0.01),),
+            layers.Dropout(0.2),
             layers.Dense(32, activation='relu'),
             layers.Dense(1)
         ])

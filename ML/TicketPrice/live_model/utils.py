@@ -11,6 +11,9 @@ def convert_to_minutes(duration):
     total_minutes = (int(hours.group(1)) * 60 if hours else 0) + (int(minutes.group(1)) if minutes else 0)
     
     return total_minutes
+def convert_arrival_time(time_str):
+    #change format 04:25 10 Jun to 04:25
+    return time_str.split(' ')[0]
 
 def clean_and_convert_time(time_str):
     if isinstance(time_str, str) and ' ' in time_str:  # Check if it's a string and contains a space
@@ -76,11 +79,15 @@ def map_total_stops(data):
         print("Warning: There are NaN values in the 'Total_Stops' column after mapping.")
     return data
 
+
 def preprocess_data(raw, label_encoders=None, scaler=None):
     data = raw.copy()
 
     # Apply function to the column
     data['Duration'] = data['Duration'].apply(convert_to_minutes)
+    data['Arrival_Time'] = data['Arrival_Time'].apply(convert_arrival_time)
+    data = map_total_stops(data)
+    data['duration_per_stop'] = data['Duration'] / (data['Total_Stops'] + 1)
 
     # Preprocess date and time columns
     data = preprocess_date_and_time(data)
@@ -90,14 +97,14 @@ def preprocess_data(raw, label_encoders=None, scaler=None):
     data, label_encoders = encode_categorical_features(data, categorical_columns, label_encoders=label_encoders)
 
     # Normalize numerical columns
-    numerical_columns = ['Journey_day', 'Journey_month', 'Dep_hour', 'Dep_minute', 'Arrival_hour', 'Arrival_minute', 'Duration']
+    numerical_columns = ['Journey_day', 'Journey_month', 'Dep_hour', 'Dep_minute', 'Arrival_hour', 'Arrival_minute', 'Duration', 'duration_per_stop']
     data, scaler = normalize_numerical_columns(data, numerical_columns, scaler=scaler)
 
     # Map Total_Stops
-    data = map_total_stops(data)
+   
 
     # Separate features and target variable
-    X = data.drop(['Price', 'Date_of_Journey', 'Dep_Time', 'Arrival_Time'], axis=1)
+    X = data.drop(['Price', 'Date_of_Journey', 'Dep_Time', 'Arrival_Time', 'Duration', 'Total_Stops'], axis=1)
     y = data['Price']
 
     return X, y, label_encoders, scaler

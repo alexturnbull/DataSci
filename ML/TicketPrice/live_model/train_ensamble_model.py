@@ -83,4 +83,9 @@ plt.title("Feature Importance from Random Forest")
 plt.show()
 
 # Save meta-model locally
+joblib.dump(ensembler.ensemble_model, r'C:\Projects\datasci2\DataSci\ML\TicketPrice\live_model\model_outputs\ensemble_model.pkl')
+joblib.dump(ensembler.xgb_model, r'C:\Projects\datasci2\DataSci\ML\TicketPrice\live_model\model_outputs\xgb_model.pkl')
+joblib.dump(ensembler.rf_model, r'C:\Projects\datasci2\DataSci\ML\TicketPrice\live_model\model_outputs\rf_model.pkl')
 joblib.dump(meta_model, r'C:\Projects\datasci2\DataSci\ML\TicketPrice\live_model\model_outputs\meta_model.pkl')
+
+print("Models saved successfully!")
